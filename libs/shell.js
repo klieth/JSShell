@@ -20,19 +20,33 @@ var Shell = (function() {
 	var canvas, ctx, width = 800, height = 400;
 	var text;
 
-	var V_PADDING = 5;
-	var LINE_HEIGHT = 12;
+	var LINE_HEIGHT = 17;
+	var CHAR_WIDTH = 12;
+
+	var linesOnScreen = 0;
 
 	var redrawCanvas = function() {
+		linesOnScreen = 0;
 		ctx.fillStyle = "rgb(0,0,0)";
 		ctx.fillRect(0,0,width,height);
 		ctx.fillStyle = "rgb(255,255,255)";
 		var str = text.val().split("\n");
-		var y = LINE_HEIGHT + V_PADDING;
+		var y = LINE_HEIGHT;
 		$.each(str,function(i, item) {
-			// TODO - if item length is longer than width, split it into multiple lines.
+			while (item.length * CHAR_WIDTH > width - (width%CHAR_WIDTH)) {
+				var result = "";
+				var i;
+				for (i = 0; i < (width - (width%CHAR_WIDTH))/CHAR_WIDTH; i++) {
+					result += item.substring(i,i+1);
+				}
+				ctx.fillText(result, 2, y);
+				linesOnScreen++;
+				y += LINE_HEIGHT;
+				item = item.substring(i);
+			}
 			ctx.fillText(item, 2, y);
-			y += LINE_HEIGHT + V_PADDING;
+			linesOnScreen++;
+			y += LINE_HEIGHT;
 		});
 	};
 
@@ -58,11 +72,20 @@ var Shell = (function() {
 		canvas.click(function() {
 			text.focus();
 		});
+		// TODO - cursor magic!
 
 		// callbacks for text
 		text.keyup(function(e) {
-			// TODO - if the value is more lines than I can handle, shift it and save.
 			redrawCanvas();
+			if (linesOnScreen * LINE_HEIGHT > height) {
+				var t = text.val().split('\n');
+				var res = t[1];
+				for (var i = 2; i < t.length; i++) {
+					res += '\n' + t[i];
+				}
+				// TODO - save t[0]
+				text.val(res);
+			}
 		});
 	};
 })();
