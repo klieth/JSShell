@@ -72,11 +72,13 @@ var Shell = (function() {
 		canvas.click(function() {
 			text.focus();
 		});
-		// TODO - cursor magic!
+		// TODO - make cursor show up on canvas
 
 		// callbacks for text
 		text.keyup(function(e) {
+			// Draw the text. This also counts the lines on the screen.
 			redrawCanvas();
+			// Use the line count to scroll
 			if (linesOnScreen * LINE_HEIGHT > height) {
 				var t = text.val().split('\n');
 				var res = t[1];
@@ -85,6 +87,17 @@ var Shell = (function() {
 				}
 				// TODO - save t[0]
 				text.val(res);
+			}
+		});
+		text.focus(function() {
+			if (text[0].setSelectionRange) {
+				text[0].setSelectionRange(text.val().length, text.val().length);
+			} else if (text[0].createTextRange) {
+				var range = text[0].createTextRange();
+				range.collapse(true);
+				range.moveEnd('character', text.val().length);
+				range.moveStart('character', text.val().length);
+				range.select();
 			}
 		});
 	};
