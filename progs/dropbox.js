@@ -102,6 +102,20 @@ ShellUtils.registerProgram("dropbox",(function() {
 		} else if (args[1] == "pwd") {
 			that.writeLine("The current directory is: " + dir);
 			that.programComplete();
+		} else if (args[1] == "open") {
+			if (!args[2]) {
+				that.writeLine("Must specify file to open.");
+				that.programComplete();
+				return 1;
+			}
+			dbxClientInstance.readFile(args[2], function (error, data) {
+				if (error) {
+					that.writeLine("Error while reading " + args[2]);
+					return error;
+				}
+				that.setDisplay(data);
+			});
+			that.writeLine("Attepmting to open: " + args[2]);
 		} else {
 			that.writeLine("Command isn't recognized");
 			that.writeLine("see dropbox --help for usage information");

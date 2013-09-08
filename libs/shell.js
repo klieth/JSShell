@@ -44,6 +44,7 @@ var ShellUtils = new ((function() {
 var Shell = (function() {
 	// Stores a reference to the original replaced node
 	var original;
+	var display = null;
 
 	// Stores the canvas (visible) and the text area (hidden)
 	var canvas, ctx, width = 800, height = 400;
@@ -122,6 +123,8 @@ var Shell = (function() {
 		original.remove();
 		delete original;
 
+		display = $("#viewer");
+
 		// set up canvas
 		ctx.font = "20px Courier";
 		ctx.fillStyle = "rgb(0,0,0)";
@@ -160,6 +163,10 @@ var Shell = (function() {
 			cursorPos = text.prop("selectionStart");
 			redrawCanvas();
 		};
+
+		this.setDisplay = function (data) {
+			display.val(data);
+		}
 
 		// callbacks for canvas
 		canvas.click(function() {
