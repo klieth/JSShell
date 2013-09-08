@@ -93,9 +93,12 @@ var Shell = (function() {
 
 	var doScroll = function() {
 		if (linesOnScreen * LINE_HEIGHT > height) {
+			// number of lines to move off the screen
 			lines = Math.ceil((linesOnScreen * LINE_HEIGHT - height)/LINE_HEIGHT);
+			console.log('lines: ' + lines);
 			var t = text.val().split('\n');
 			var res = t[lines];
+			console.log('res: ' + res);
 			for (var i = lines + 1; i < t.length; i++) {
 				res += '\n' + t[i];
 			}
@@ -154,6 +157,8 @@ var Shell = (function() {
 			cursorPos = text.prop("selectionStart");
 			redrawCanvas();
 			doScroll();
+			cursorPos = text.prop("selectionStart");
+			redrawCanvas();
 		};
 
 		// callbacks for canvas
@@ -199,6 +204,8 @@ var Shell = (function() {
 			redrawCanvas();
 			// Use the line count to scroll
 			doScroll();
+			cursorPos = text.prop("selectionStart");
+			redrawCanvas();
 			typed++;
 		});
 		text.mouseup(function() {

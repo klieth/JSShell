@@ -8,10 +8,13 @@ ShellUtils.registerProgram("dropbox",(function() {
 		if (args.length == 1 || args[1] == "--help") {
 			that.writeLine("Usage: dropbox [command] [additional_args]");
 			that.writeLine("Commands:");
-			that.writeLine("  auth - starts the authentication process. This must be done before any other dropbox commands work.");
+			that.writeLine("  auth         - starts the authentication process. This must be done before any other dropbox commands work.");
 			that.writeLine("  ls  or  list - lists the files in the current directory.");
-			that.writeLine("  userinfo - shows the signed in user");
+			that.writeLine("  userinfo     - shows the signed in user");
+			that.writeLine("  cd [dir]     - changes to the specified directory");
+			that.writeLine("  pwd          - prints the current directory");
 			that.programComplete();
+			return 0;
 		}
 		if (args[1] == "auth") {
 			that.writeLine("Authenticating....");
@@ -53,10 +56,10 @@ ShellUtils.registerProgram("dropbox",(function() {
 				return 1;
 			}
 			if (args[2] == ".." && dir != "/") {
-				//var r = /^([\/].*)[\/]$/;
-				var r = /\/.*\/$/;
-				dir = dir.replace(r, '/');
+				var r = /[^\/]*\/$/;
+				dir = dir.replace(r, '');
 				console.log("dir: " + dir);
+				ls = null;
 				that.programComplete();
 				return 0;
 			}
