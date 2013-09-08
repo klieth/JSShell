@@ -117,6 +117,7 @@ var Shell = (function() {
 		canvas.attr('id',ShellUtils.getNewShellID());
 		ctx = canvas[0].getContext('2d');
 		text = $("<textarea></textarea>");
+		text.css("opacity",0);
 		text.val(prompt);
 		original.parent().append(canvas);
 		original.parent().append(text);
