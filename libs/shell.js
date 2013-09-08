@@ -8,6 +8,7 @@ var ShellUtils = new ((function() {
 			$.each(args, function (i, item) {
 				that.writeLine(item);
 			});
+			that.programComplete();
 			return 0;
 		}
 	};
@@ -20,6 +21,7 @@ var ShellUtils = new ((function() {
 			return "shellID" + shells;
 		};
 		this.registerProgram = function(name, main) {
+			console.log("registering: " + name);
 			if (progs[name]) {
 				console.err("Program with that name already exists");
 				return null;
@@ -31,7 +33,8 @@ var ShellUtils = new ((function() {
 				return progs[name].call(scope, args);
 			} else {
 				scope.writeLine("No such program found");
-				console.log("No such program found");
+				//console.log("No such program found");
+				scope.programComplete();
 				return false;
 			}
 		};
@@ -101,6 +104,8 @@ var Shell = (function() {
 		}
 	};
 
+	var typed = 0;
+
 	return function(id) {
 		// Remove the specified id, replace with canvas
 		original = $('#' + id);
@@ -126,18 +131,30 @@ var Shell = (function() {
 		// helper utils
 		this.getLastLine = function(after) {
 			var all = text.val().split("\n");
-			return all[all.length - 1].substring(after ? after.length : "");
+			//return all[all.length - 1].substring(after ? after.length : "");
+			if (after) {
+				return all[all.length - 1].substring(after.length);
+			} else {
+				return all[all.length - 2]
+			}
 		};
 
 		this.write = function(str) {
 			str = str || "";
 			text.val(text.val() + str);
-		}
+		};
 
 		this.writeLine = function(str) {
 			str = str || "";
 			text.val(text.val() + str + '\n');
-		}
+		};
+
+		this.programComplete = function() {
+			this.write(prompt);
+			cursorPos = text.prop("selectionStart");
+			redrawCanvas();
+			doScroll();
+		};
 
 		// callbacks for canvas
 		canvas.click(function() {
@@ -155,17 +172,23 @@ var Shell = (function() {
 
 		// callbacks for text
 		text.keypress({that:this},function(e) {
-			// TODO - if enter, parse the most recent line and start the program
+			if (e.which == 8 || e.keyCode == 8) {
+				console.log(typed);
+				if (typed < 1) {
+					typed--;
+					e.preventDefault();
+					return false;
+				}
+				typed = typed - 2;
+			}
 			if (e.which == 13 || e.keyCode == 13) {
+				typed = 0;
 				var line = e.data.that.getLastLine(prompt).split(" ");
 				e.data.that.writeLine();
 				console.log(text.val().substring(2).split('\n'));
 				console.log("running: " + line[0]);
+				//var response = ShellUtils.runProgram(e.data.that, line[0], line);
 				console.log(line[0] + " returned: " + ShellUtils.runProgram(e.data.that, line[0], line));
-				e.data.that.write(prompt);
-				cursorPos = text.prop("selectionStart");
-				redrawCanvas();
-				doScroll();
 				return false;
 			}
 			return true;
@@ -176,6 +199,7 @@ var Shell = (function() {
 			redrawCanvas();
 			// Use the line count to scroll
 			doScroll();
+			typed++;
 		});
 		text.mouseup(function() {
 			cursorPos = text.prop("selectionStart");
