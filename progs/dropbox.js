@@ -19,7 +19,7 @@ ShellUtils.registerProgram("dropbox",(function() {
 		if (args[1] == "auth") {
 			that.writeLine("Authenticating....");
 			var client = new Dropbox.Client({key: "cwo0v8ms7rlmqz6"});
-			client.authDriver(new Dropbox.AuthDriver.Popup({receiverUrl: "http://localhost:3131/receive.html"}));
+			client.authDriver(new Dropbox.AuthDriver.Popup({receiverUrl: "https://ec2-54-200-9-210.us-west-2.compute.amazonaws.com/receive.html"}));
 			client.authenticate(function(error, client) {
 				if (error) {
 					that.writeLine("There was an error while authenticating.");
