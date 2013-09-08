@@ -190,9 +190,6 @@ var Shell = (function() {
 				typed = 0;
 				var line = e.data.that.getLastLine(prompt).split(" ");
 				e.data.that.writeLine();
-				console.log(text.val().substring(2).split('\n'));
-				console.log("running: " + line[0]);
-				//var response = ShellUtils.runProgram(e.data.that, line[0], line);
 				console.log(line[0] + " returned: " + ShellUtils.runProgram(e.data.that, line[0], line));
 				return false;
 			}
