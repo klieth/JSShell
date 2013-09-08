@@ -9,7 +9,7 @@ ShellUtils.registerProgram("skydrive",(function() {
 			});
 			WL.init({
 				client_id: "000000004C0FF690",
-				redirect_uri: "http://ec2-54-200-9-210.us-west-2.compute.amazonaws.com/skydrivereceive.html",
+				redirect_uri: "https://cs.unc.edu/~klieth/term/skydrivereceive.html",
 				scope: "wl.signin",
 				response_type: "token"
 			}).then(function() {
@@ -24,7 +24,7 @@ ShellUtils.registerProgram("skydrive",(function() {
 		} else if (args[1] == "ls") {
 			WL.login({
 				client_id: "000000004C0FF690",
-				redirect_uri: "http://ec2-54-200-9-210.us-west-2.compute.amazonaws.com/skydrivereceive.html",
+				redirect_uri: "https://cs.unc.edu/~klieth/term/skydrivereceive.html",
 				scope: "wl.skydrive",
 				response_type: "token"
 			}).then(function(response) {
